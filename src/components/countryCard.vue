@@ -1,5 +1,5 @@
 <template>
-   <router-link :to="country.name.replace(' ', '-').toLowerCase()" 
+   <router-link :to="`countries/${country.name.replace(' ', '-').toLowerCase()}`" 
       class="
          min-h-[336px] max-h-[336px] bg-white shadow-[0px_0px_7px_2px_rgba(0,0,0,0.0294384)] 
          rounded-[5px] overflow-hidden hover:scale-[1.02]

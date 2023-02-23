@@ -19,9 +19,28 @@ const routes = [
 
    //COUNTRY DETAIL
    {
-      path: '/country',
+      path: '/countries',
       name: 'country',
-      component: () => import(/* webpackChunkName: "countryDetail" */ '@/views/country/country.vue')
+      component: () => import(/* webpackChunkName: "countryDetail" */ '@/views/country/country.vue'),
+      props: true,
+
+      children: [
+         {
+            path: '',
+            redirect: {name: 'home'}
+         },
+
+         {
+            path: '/',
+            redirect: {name: 'home'}
+         },
+
+         {
+            path: ':id',
+            name: 'country'
+   
+         }
+      ]
    }
 ]
 
