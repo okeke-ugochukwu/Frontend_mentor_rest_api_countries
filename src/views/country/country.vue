@@ -5,14 +5,7 @@
 
       <!-- CENTERED BOX -->
       <div class="w-[91.46%] m-auto md:w-[88.88%] 2xl:w-[83%]">
-         <button 
-            class="
-               flex items-center justify-center gap-2 text-rca-black text-sm font-light 
-               px-[23px] py-[6px] bg-white rounded-sm shadow-rca hover:shadow-[0px_0px_7px_rgba(0,0,0,0.293139)] 
-               md:text-base md:gap-[10px] md:min-w-[136px] md:px-0 md:py-[10px] md:rounded-md
-            "
-            @click="$router.go(-1)"
-         >
+         <actionBtn @click="$router.go(-1)" class="md:min-w-[136px]"> 
             <svg 
                class="[&>path]:fill-rca-black w-[17px] h-[12px] md:w-[13.3px] md:h-[13.3px]" 
                viewBox="0 0 17 12" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -20,8 +13,8 @@
                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.81802 0.696699L6.87868 1.75736L3.3785 5.25754H16.7428L16.7428 6.74246H3.3785L6.87868 10.2426L5.81802 11.3033L0.514719 6L5.81802 0.696699Z" />
             </svg>
 
-            <span>Back</span>
-         </button>
+            <span> Back </span>
+         </actionBtn>
 
          <!-- COUNTRY DETAILS -->
          <div 
@@ -51,7 +44,7 @@
                   <h2 
                      class="
                         font-extrabold text-[22px] leading-[30.01px] mb-4 
-                        md:text-[32px] md:leading-[43.65px]
+                        md:text-[32px] md:leading-[43.65px] md:mb-[23px]
                      "
                   >
                      {{ country.name }}
@@ -62,6 +55,7 @@
                      class="
                         flex flex-col gap-8 mb-[34px]
                         sm:flex-row sm:gap-[117px]
+                        md:mb-[68px]
                      "
                   >
                      <div>
@@ -92,9 +86,9 @@
                   <!-- BORDER COUNTRIES -->
                   <div v-if="country.borders" class="max-w-[700px]">
                     <h3
-                        class="text-base leading-6 font-semibold mb-4"
+                        class="text-base leading-6 font-semibold mb-4 md:inline-block"
                     >
-                        Border Countries: 
+                        Border Countries: &nbsp;
                     </h3>
 
                     <router-link  :to="country.code"
@@ -112,6 +106,7 @@
             </div>
          </div>
       </div>
+
    </main>
    
 </template>
@@ -119,6 +114,7 @@
 <script>
    import headerBar from '@/components/header.vue'
    import loader from '@/components/loader.vue';
+   import actionBtn from '@/components/actionBtn.vue'
    import GET_COUNTRIES from '@/composables/getCountries';
    import { computed, onMounted } from 'vue';
    import { useStore } from 'vuex'
@@ -126,7 +122,7 @@
 
    export default {
       name: 'countryDetail',
-      components: { headerBar, loader },
+      components: { headerBar, loader, actionBtn },
       props: ['id'],
 
       setup (props) {

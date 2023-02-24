@@ -2,7 +2,8 @@ import { createStore } from 'vuex'
 
 var store = createStore({
   state: {
-   countries: []
+   countries: [],
+   theme: 'light'
   },
   getters: {
   },

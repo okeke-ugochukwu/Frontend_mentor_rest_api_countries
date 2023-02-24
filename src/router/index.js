@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import homePage from  '@/views/home/home.vue'
+import HOMEPAGE from  '@/views/home/home.vue'
 
 const routes = [
    // HOME - ALL COUNTRIES
@@ -14,7 +14,7 @@ const routes = [
    {
       path: '/',
       name: 'home',
-      component: homePage
+      component: HOMEPAGE
    },
 
    //COUNTRY DETAIL

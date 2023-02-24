@@ -107,12 +107,23 @@
                >
                   
                <countryCard 
-                  v-for="country in countries.slice(0,50)" :key="country.name"
+                  v-for="country in countries.slice(0,countryCount)" :key="country.name"
                   :country="country"
                />
 
                </div>
             </div>
+
+            <!-- SHOW MORE BTN -->
+            <actionBtn  
+               @click="INCREASE_COUNTRY_COUNT"
+               class="
+                  w-[60%] min-w-[200px] max-w-[300px] px-[30px] 
+                  m-auto mt-10 sm:mt-20
+               "
+            > 
+               Show more countries
+            </actionBtn>
          </div>
          
       </main>
@@ -122,6 +133,7 @@
 <script>
    import headerBar from '@/components/header.vue'
    import loader from '@/components/loader.vue'
+   import actionBtn from '@/components/actionBtn.vue';
    import countryCard from '@/components/countryCard.vue'
    import GET_COUNTRIES from '@/composables/getCountries';
    import { ref, computed, onMounted } from 'vue';
@@ -129,10 +141,16 @@
 
    export default {
       name: 'homePage',
-      components: { headerBar, loader, countryCard },
+      components: { headerBar, loader, actionBtn, countryCard },
       
       setup () {
          const store = useStore();
+
+         var countryCount = ref([36])
+
+         const INCREASE_COUNTRY_COUNT = () => {
+            countryCount.value = countryCount.value / 4 * 4 + 12
+         }
 
          onMounted(() => {
             //CHECK IF THERE'S DATA IN STORE TFIRST
@@ -152,7 +170,7 @@
          })      
          
          
-         return { regions, countries }
+         return { regions, countries, countryCount, INCREASE_COUNTRY_COUNT}
       }
    }
 </script>
