@@ -107,7 +107,7 @@
                >
                   
                <countryCard 
-                  v-for="country in countries.slice(0,4)" :key="country.name"
+                  v-for="country in countries.slice(0,50)" :key="country.name"
                   :country="country"
                />
 
