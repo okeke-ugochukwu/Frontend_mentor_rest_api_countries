@@ -23,10 +23,25 @@ const routes = [
       name: 'country',
       component: () => import(/* webpackChunkName: "countryDetail" */ '@/views/country/country.vue'),
       props: true,
+      scrollBehavior(to, from, savedPosition) {
+         console.log(to, from, savedPosition)
+   
+         return new Promise((resolve) => {
+            setTimeout(() => {
+               if (savedPosition) {
+                  resolve(savedPosition)
+               }
+               else {
+                  resolve({ top: 0 })
+               }
+            }, 500)
+         })
+      },
 
       children: [
          {
             path: '',
+            name: 'noCountry',
             redirect: {name: 'home'}
          },
 
@@ -37,8 +52,8 @@ const routes = [
 
          {
             path: ':id',
-            name: 'country'
-   
+            name: 'country',
+            component: () => import(/* webpackChunkName: "countryDetail" */ '@/views/country/country.vue'),
          }
       ]
    }

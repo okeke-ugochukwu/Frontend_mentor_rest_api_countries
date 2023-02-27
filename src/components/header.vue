@@ -9,9 +9,11 @@
          
          <!-- CENTERED BOX -->
          <div class="w-[91.46%]  m-auto flex justify-between md:w-[88.88%] 2xl:w-[83%]">
-            <h1 class="text-sm text-rca-black font-extrabold md:text-2xl">
-               Where in the world?
-            </h1>
+            <router-link to="/">
+               <h1 class="text-sm text-rca-black font-extrabold md:text-2xl">
+                  Where in the world?
+               </h1>
+            </router-link>
 
             <button class="flex justify-between items-center gap-2.5">
                <svg 

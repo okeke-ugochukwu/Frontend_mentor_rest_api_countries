@@ -21,9 +21,9 @@
                >
                   <input 
                      type="text" name="text" id="text"
-                     autocomplete="off"
+                     autocomplete="off" :value="searchQuery "
                      placeholder="Search for a country…"
-                     class="text-xs text-[#C4C4C4] placeholder:text-[#C4C4C4] w-full focus:outline-none focus:text-[#848484] peer/search md:text-sm"
+                     class="text-xs text-[#C4C4C4] placeholder:text-[#C4C4C4] w-full focus:outline-none focus:text-[#848484] peer/search md:text-sm" @keyup="SET_SEARCH_QUERY"
                   >
 
                   <svg 
@@ -43,7 +43,7 @@
                <!-- FILTER -->
                <div class="relative">
                   <!-- ACTUAL SELECT + OPTIONS -->
-                  <select name="regions" id="regions" class="hidden">
+                  <select name="regions" id="regions" class="hidden" v-model="filterQuery">
                      <option  
                         v-for="region in regions.list" :key="region"
                         :value="region"
@@ -59,27 +59,29 @@
                         justify-between py-[14px] pl-[24px] pr-[19px] shadow-rca min-h-[48px]
                         md:min-h-[56px]
                      "
-                     @click="regions.isShown? regions.isShown = false : regions.isShown = true"
+                     @click="regionslistIsShown? regionslistIsShown = false : regionslistIsShown = true"
+                     @blur="regionslistIsShown = false"
                   >
-                     <span class="text-xs text-rca-black md:text-sm"> Filter by Region </span>
+                     <span class="text-xs text-rca-black md:text-sm"> {{ filterQuery === 'None'? 'Filter by Region' : filterQuery }} </span>
 
                      <svg 
                         viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg"
                         class="[&>path]:fill-black w-[8px] h-[6px] md:h-[10px]"
                      >
-                           <path fill-rule="evenodd" clip-rule="evenodd" d="M6.875 0.875L4 3.75L1.125 0.875L0.25 1.75L4 5.5L7.75 1.75L6.875 0.875Z"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.875 0.875L4 3.75L1.125 0.875L0.25 1.75L4 5.5L7.75 1.75L6.875 0.875Z"/>
                      </svg>
                   </button>
 
-                  <div class="absolute bg-white rounded-[5px] w-[200px] mt-1 shadow-rca" v-show="regions.isShown">
+                  <div class="absolute bg-white rounded-[5px] w-[200px] mt-1 shadow-rca" v-show="regionslistIsShown">
                      <ul class="py-4">
                         <li 
-                           v-for="region in regions.list" :key="region"
+                           v-for="region in regions" :key="region"
                            class="
                               text-xs text-rca-black pl-[24px] leading-4 py-1 
                               hover:cursor-pointer hover:opacity-75
                               md:text-sm
                            "
+                           @click="SET_REGION_FILTER(region)"
                         >
                            {{ region }}
                         </li>
@@ -92,7 +94,10 @@
             <div>
 
                <!-- PERLOADER -->
-               <div class="w-full flex justify-center mt-10" v-if="countries.length === 0 || countries === null ">
+               <div 
+                  class="w-full flex justify-center mt-10" 
+                  v-if="countries.length === 0 || countries === null"
+               >
                   <loader class="ml-[-50px]"/>
                </div>
 
@@ -107,23 +112,57 @@
                >
                   
                <countryCard 
-                  v-for="country in countries.slice(0,countryCount)" :key="country.name"
+                  v-for="country in filteredCountries.slice(0, countryCount)" :key="country.name"
                   :country="country"
                />
 
                </div>
             </div>
 
-            <!-- SHOW MORE BTN -->
-            <actionBtn  
-               @click="INCREASE_COUNTRY_COUNT"
+            <div 
+               v-if="filteredCountries.length === 0"
                class="
-                  w-[60%] min-w-[200px] max-w-[300px] px-[30px] 
-                  m-auto mt-10 sm:mt-20
+                  bg-white py-3 w-full max-w-[400px] m-auto text-center
+                  rounded-[5px] shadow-rca text-sm
+                  md:text-base md:py-4
                "
-            > 
-               Show more countries
-            </actionBtn>
+            >
+               Your search didn't pull up any results
+            </div>
+
+
+            <div 
+               class="
+                  mt-10 flex flex-col gap-3 sm:flex-row w-[76.96%] m-auto
+                  justify-center
+                  sm:w-[90%]
+               "
+            >
+               <!-- SHOW MORE BTN -->
+               <actionBtn  
+                  @click="INCREASE_COUNTRY_COUNT"
+                  v-if="filteredCountries.length != 0 && filteredCountries.length > 24"
+                  class="
+                     w-[60%] min-w-[200px] max-w-[300px] px-[30px] 
+                     m-auto rounded-md min-h-[45px] font-bold
+                  "
+               > 
+                  Show more countries
+               </actionBtn>
+
+               
+               <actionBtn  
+                  @click="SCROLL_TO_TOP"
+                  v-if="filteredCountries.length != 0 && filteredCountries.length > 24"
+                  class="
+                     w-[60%] min-w-[200px] max-w-[300px] px-[30px] 
+                     m-auto rounded-md min-h-[45px] font-bold
+                  "
+               > 
+                  Go to top
+               </actionBtn>
+
+            </div>
          </div>
          
       </main>
@@ -146,8 +185,8 @@
       setup () {
          const store = useStore();
 
-         var countryCount = ref([36])
-
+         //TO CONTROL CONTRIES DISPLAYED AT  GO
+         var countryCount = ref([24])
          const INCREASE_COUNTRY_COUNT = () => {
             countryCount.value = countryCount.value / 4 * 4 + 12
          }
@@ -155,22 +194,67 @@
          onMounted(() => {
             //CHECK IF THERE'S DATA IN STORE TFIRST
             countries.value.length === 0 ?
-               GET_COUNTRIES(store) :
-               console.log('Data in store')
+               GET_COUNTRIES(store) : console.log('Data in store')
          })
-         
-         const regions = ref({
-            isShown: false,
-            list: ['None', 'Africa', 'America', 'Asia', 'Europe', 'Oceania']
-         });
 
-         
+         //GENERTE LIST OF REGIONS & FILTER TOGGLE
+         var regions = computed(() => {
+            var temp = countries.value.map(country => country.region)
+            //REMOVE DUPLICATES & SORT ALHABETICALLY
+            temp = [...new Set(temp)].sort()
+
+            return [  'None', ...temp ]
+         })
+         var regionslistIsShown = ref(false)
+        
+         //GET COUNTRIES FROM STATE
          const countries = computed(() => {
             return store.state.countries
          })      
          
+         //GET & SET SEARCH QUERY
+         var searchQuery = computed(() => {
+            return store.state.queries.search
+         });
+         const SET_SEARCH_QUERY = (e) => {
+            store.commit('setQuery', ['search', e.target.value])
+         }
+
+         //GET & SET FILTER QUERY
+         var filterQuery = computed(() => {
+            return store.state.queries.filter
+         });
+         const SET_REGION_FILTER = (region) => {
+            store.commit('setQuery', ['filter', region])
+            regionslistIsShown.value = false
+         }
+
+         const filteredCountries = computed(() => {
+           var temp = [];
+           var search_query = searchQuery.value.toLowerCase();
+
+           if(filterQuery.value === 'None') {
+            temp = countries.value.filter(country => country.name.toLowerCase().includes(search_query))
+           }
+           else {
+            temp = countries.value.filter(country => country.name.toLowerCase().includes(search_query) && country.region === filterQuery.value)
+           }
+           
+            return temp
+         }) 
          
-         return { regions, countries, countryCount, INCREASE_COUNTRY_COUNT}
+         const SCROLL_TO_TOP = () => {
+            window.scrollTo(0,0)
+         }
+         
+         return { 
+            regions, regionslistIsShown, 
+            countries, filteredCountries,
+            countryCount, INCREASE_COUNTRY_COUNT, 
+            searchQuery, SET_SEARCH_QUERY, 
+            filterQuery, SET_REGION_FILTER,
+            SCROLL_TO_TOP
+         }
       }
    }
 </script>

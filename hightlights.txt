@@ -1,0 +1,8 @@
+- save data to state to avoid trafficking server with requests. 
+
+- get data from server only when there's no data in store.
+
+- save search and filter queries in store so users can 
+  continue from where they where  on homepage.
+
+- Think about all the yeye code you have written in the past. Otilor :/
