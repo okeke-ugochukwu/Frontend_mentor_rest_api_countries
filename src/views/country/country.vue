@@ -4,7 +4,7 @@
    <main class="mb-[60px]">
 
       <!-- CENTERED BOX -->
-      <div class="w-[91.46%] m-auto md:w-[88.88%] 2xl:w-[83%]">
+      <div class="w-[91.46%] m-auto md:w-[88.88%]">
          <actionBtn @click="$router.go(-1)" class="md:min-w-[136px]"> 
             <svg 
                class="[&>path]:fill-rca-black w-[17px] h-[12px] md:w-[13.3px] md:h-[13.3px]" 
@@ -26,17 +26,17 @@
             </div>
 
             <!-- DETAILS -->
-            <div v-else class="xl:flex xl:gap-[149.22px]">
+            <div v-else class="xl:flex flex-row xl:gap-[149.22px]">
                <!-- COUNTRY FLAG -->
                <div
                   class="
-                     mb-11
+                     mb-11 overflow-hidden w-full min-w-[320px] min-h-[229px] rounded-[10px]
+                     sm:max-w-[320px]
+                     xl:min-w-[560px] xl:max-w-[560px] xl:min-h-[401px] 
                   "
+                  :style="{ 'background': `url(${country.flags.svg}) center/cover no-repeat` }"
                >
-                  <img 
-                     :src="country.flags.png" 
-                     :alt="`${country.name.replaceAll(' ','_').toLowerCase()}'s_flag`"
-                  >
+                  
                </div>
 
                <!-- COUNTRY INFO -->
@@ -54,11 +54,11 @@
                   <div
                      class="
                         flex flex-col gap-8 mb-[34px]
-                        sm:flex-row sm:gap-[117px]
-                        md:mb-[68px]
+                        sm:flex-row 
+                        md:mb-[68px] 2xl:gap-[117px]
                      "
                   >
-                     <div>
+                     <div class="">
                         <span
                            v-for="info in Object.entries(GET_COUNTRY_INFO(country)).slice(0 ,5)" :key="info"
                            class="
@@ -84,14 +84,18 @@
                   </div>
                   
                   <!-- BORDER COUNTRIES -->
-                  <div v-if="country.borders" class="max-w-[700px]">
+                  <div 
+                     v-if="country.borders" 
+                     class="  "
+                  >
                     <h3
                         class="text-base leading-6 font-semibold mb-4 md:inline-block"
                     >
                         Border Countries: &nbsp;
                     </h3>
 
-                    <router-link  :to="country.code"
+                    
+                     <router-link  :to="country.code"
                         v-for="country in GET_BORDER_COUNTRIES(country.borders)" :key="country"
                         class="
                            inline-block text-xs py-[6px] px-[30px] bg-white rounded-sm mr-[10px]
@@ -101,6 +105,7 @@
                     >
                         {{ country.name }}
                     </router-link>
+                    
                   </div>
                </div>
             </div>

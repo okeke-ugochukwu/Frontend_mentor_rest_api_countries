@@ -4,6 +4,8 @@ var store = createStore({
   state: {
       countries: [],
 
+      countryCount: 24,
+
       queries: {
          search: '',
          filter: 'None'
@@ -21,6 +23,10 @@ var store = createStore({
       setQuery(state, payload) {
          payload[0] === 'search' ?
             state.queries.search = payload[1] : state.queries.filter = payload[1]
+      },
+
+      increaseCountryCount(state) {
+         state.countryCount  = state.countryCount + 12
       }
   },
   actions: {

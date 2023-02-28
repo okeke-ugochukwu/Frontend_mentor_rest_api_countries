@@ -60,8 +60,7 @@
                         md:min-h-[56px]
                      "
                      @click="regionslistIsShown? regionslistIsShown = false : regionslistIsShown = true"
-                     @blur="regionslistIsShown = false"
-                  >
+                   >
                      <span class="text-xs text-rca-black md:text-sm"> {{ filterQuery === 'None'? 'Filter by Region' : filterQuery }} </span>
 
                      <svg 
@@ -120,7 +119,7 @@
             </div>
 
             <div 
-               v-if="filteredCountries.length === 0"
+               v-if="filteredCountries.length === 0 && searchQuery.length != 0"
                class="
                   bg-white py-3 w-full max-w-[400px] m-auto text-center
                   rounded-[5px] shadow-rca text-sm
@@ -140,7 +139,7 @@
             >
                <!-- SHOW MORE BTN -->
                <actionBtn  
-                  @click="INCREASE_COUNTRY_COUNT"
+                  @click="$store.commit('increaseCountryCount')"
                   v-if="filteredCountries.length != 0 && filteredCountries.length > 24"
                   class="
                      w-[60%] min-w-[200px] max-w-[300px] px-[30px] 
@@ -185,12 +184,15 @@
       setup () {
          const store = useStore();
 
-         //TO CONTROL CONTRIES DISPLAYED AT  GO
-         var countryCount = ref([24])
-         const INCREASE_COUNTRY_COUNT = () => {
-            countryCount.value = countryCount.value / 4 * 4 + 12
-         }
+         //TO CONTROL CONTRIES DISPLAYED AT ONCE
+         var countryCount = computed(() => {
+            return store.state.countryCount
+         });
 
+         document.getElementById('app').addEventListener('mouseup',() => {
+            regionslistIsShown.value = false
+         })
+        
          onMounted(() => {
             //CHECK IF THERE'S DATA IN STORE TFIRST
             countries.value.length === 0 ?
@@ -228,6 +230,10 @@
             store.commit('setQuery', ['filter', region])
             regionslistIsShown.value = false
          }
+         const CLOSE_DROPDOWN = () => {
+            regionslistIsShown.value === true?
+               regionslistIsShown.value = false : console.log('Dropdown closed')
+         }
 
          const filteredCountries = computed(() => {
            var temp = [];
@@ -250,7 +256,7 @@
          return { 
             regions, regionslistIsShown, 
             countries, filteredCountries,
-            countryCount, INCREASE_COUNTRY_COUNT, 
+            countryCount, CLOSE_DROPDOWN,
             searchQuery, SET_SEARCH_QUERY, 
             filterQuery, SET_REGION_FILTER,
             SCROLL_TO_TOP
