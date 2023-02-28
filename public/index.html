@@ -1,16 +1,60 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="" class="">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width,initial-scale=1.0">
+      <link rel="icon" href="<%= BASE_URL %>favicon.png">
+      <title><%= htmlWebpackPlugin.options.title %></title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">    
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">    
+
+      <meta name="description" content="Frontend Mentor Challenge">
+      <meta name="keywords" content="Frontend, Mentor, Challenge, okeke-ugochukwu, github, developer">
+      <meta name="theme-color" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <!--Open Graph data-->
+      <meta property="og:locale" content="en_US"/>
+      <meta property="og:type" content="website"/>
+      <meta property="og:title" content="REST API Countries"/>
+      <meta property="og:description" content="Frontend Mentor Challenge"/>
+     
+      <meta property="og:image:width" content="1200"/>
+      <meta property="og:image:height" content="600"/>
+      <meta property="og:image:alt" content="Website Image Snippet"/>
+      <meta name="robots" content="follow, index">
+
+      <!--Twitter Cards-->
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="REST API Countries">
+      <meta name="twitter:description" content="Frontend Mentor Challenge">
+      
+      <script>
+         var saved_theme = localStorage.getItem('theme');
+
+         //CHECK IF IT'S FIRST TIME VISIT, THEN ACT ACCORDINGLY
+         if(saved_theme === null) {
+            //IF IT IS, CHECK THE DEVICE PREFRENCE AND MATCH APP THEME TO IT
+            //SAVE IN MEMEORY FOR NEXT TIME VISIT
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+               document.querySelector("html").classList.add("dark")
+               localStorage.setItem('theme', 'dark')
+            }
+            else {
+               document.querySelector("html").classList.remove("dark")
+               localStorage.setItem('theme', 'light')
+            }
+         }
+         else {
+            //IF IT'S NOT, CHECK SAVED APP THEME AND SET 
+            document.querySelector("html").classList.add(saved_theme)
+         }
+      </script>
   </head>
+
   <body class="bg-rca-white min-h-screen">
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
@@ -18,4 +62,5 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+
 </html>

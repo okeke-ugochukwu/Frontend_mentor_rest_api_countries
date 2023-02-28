@@ -4,7 +4,7 @@ var store = createStore({
   state: {
       countries: [],
 
-      countryCount: 24,
+      countryCount: 12,
 
       queries: {
          search: '',

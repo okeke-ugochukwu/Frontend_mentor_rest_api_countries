@@ -1,5 +1,5 @@
 <template>
-   <div class="min-h-screen bg-rca-white">
+   <div class="min-h-screen bg-rca-white dark:bg-rca-grey-2 pb-[0.01px]">
 
       <headerBar />
       
@@ -9,7 +9,7 @@
          <div class="w-[91.46%] m-auto md:w-[88.88%] 2xl:w-[83%]">
 
             <!-- SEARCH + fILTER -->
-            <div class="w-full flex flex-col gap-[40px] md:flex-row justify-between">
+            <div class="w-full flex flex-col gap-[40px] md:flex-row justify-between ">
 
                <!-- SEARCH -->
                <div 
@@ -17,17 +17,28 @@
                      flex flex-row-reverse justify-end items-center gap-[32.2px] px-[32px] py-4 w-full 
                      bg-white min-h-[48px] rounded-[5px] shadow-rca max-w-[480px]
                      md:min-h-[56px]
+
+                     dark:bg-rca-grey
                   "
                >
                   <input 
                      type="text" name="text" id="text"
                      autocomplete="off" :value="searchQuery "
                      placeholder="Search for a country…"
-                     class="text-xs text-[#C4C4C4] placeholder:text-[#C4C4C4] w-full focus:outline-none focus:text-[#848484] peer/search md:text-sm" @keyup="SET_SEARCH_QUERY"
+                     class=
+                        "text-xs text-[#C4C4C4] placeholder:text-[#C4C4C4] w-full 
+                        focus:outline-none focus:text-[#848484] peer/search md:text-sm
+                        dark:bg-rca-grey  dark:text-white
+                     " 
+                     @keyup="SET_SEARCH_QUERY"
                   >
 
                   <svg 
-                     class="[&>path]:fill-[#B2B2B2] w-4 h-4 peer-focus/search:[&>path]:fill-[#848484] md:w-[18px] md:h-[18px]" 
+                     class="
+                     [&>path]:fill-[#B2B2B2] w-4 h-4 md:w-[18px] md:h-[18px]
+                     peer-focus/search:[&>path]:fill-[#848484] 
+                     dark:peer-focus/search:[&>path]:fill-[#ffffff]
+                     " 
                      viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
                   >
                      <path class="" fill-rule="evenodd" clip-rule="evenodd" d="M11.1111 9.77778H10.4L10.1333 9.51111C11.0222 8.53333 11.5556 7.2 
@@ -58,27 +69,30 @@
                         bg-white rounded-[5px] w-[200px] flex items-center 
                         justify-between py-[14px] pl-[24px] pr-[19px] shadow-rca min-h-[48px]
                         md:min-h-[56px]
+                        dark:bg-rca-grey dark:text-white
                      "
-                     @click="regionslistIsShown? regionslistIsShown = false : regionslistIsShown = true"
+                     @click="regionslistIsShown ? regionslistIsShown = false : regionslistIsShown = true"
                    >
-                     <span class="text-xs text-rca-black md:text-sm"> {{ filterQuery === 'None'? 'Filter by Region' : filterQuery }} </span>
+                     <span class="text-xs text-rca-black md:text-sm dark:text-white"> 
+                        {{ filterQuery === 'None'? 'Filter by Region' : filterQuery }} 
+                     </span>
 
                      <svg 
                         viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg"
-                        class="[&>path]:fill-black w-[8px] h-[6px] md:h-[10px]"
+                        class="[&>path]:fill-black w-[8px] h-[6px] md:h-[10px] dark:[&>path]:fill-white"
                      >
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M6.875 0.875L4 3.75L1.125 0.875L0.25 1.75L4 5.5L7.75 1.75L6.875 0.875Z"/>
                      </svg>
                   </button>
 
-                  <div class="absolute bg-white rounded-[5px] w-[200px] mt-1 shadow-rca" v-show="regionslistIsShown">
+                  <div class="absolute bg-white rounded-[5px] w-[200px] mt-1 shadow-rca dark:bg-rca-grey" v-show="regionslistIsShown">
                      <ul class="py-4">
                         <li 
                            v-for="region in regions" :key="region"
                            class="
                               text-xs text-rca-black pl-[24px] leading-4 py-1 
                               hover:cursor-pointer hover:opacity-75
-                              md:text-sm
+                              md:text-sm  dark:text-white
                            "
                            @click="SET_REGION_FILTER(region)"
                         >
@@ -124,6 +138,7 @@
                   bg-white py-3 w-full max-w-[400px] m-auto text-center
                   rounded-[5px] shadow-rca text-sm
                   md:text-base md:py-4
+                  dark:text-white dark:bg-rca-grey dark:font-bold
                "
             >
                Your search didn't pull up any results
@@ -144,6 +159,7 @@
                   class="
                      w-[60%] min-w-[200px] max-w-[300px] px-[30px] 
                      m-auto rounded-md min-h-[45px] font-bold
+                     dark:text-white dark:bg-rca-grey dark:font-bold
                   "
                > 
                   Show more countries
@@ -156,6 +172,7 @@
                   class="
                      w-[60%] min-w-[200px] max-w-[300px] px-[30px] 
                      m-auto rounded-md min-h-[45px] font-bold
+                     dark:text-white dark:bg-rca-grey  dark:font-bold
                   "
                > 
                   Go to top
@@ -189,9 +206,10 @@
             return store.state.countryCount
          });
 
-         document.getElementById('app').addEventListener('mouseup',() => {
-            regionslistIsShown.value = false
-         })
+        //  document.body.addEventListener('mousedown',() => {
+        //     regionslistIsShown.value === true ?
+        //        alert('open') : alert('closed') 
+        //  })
         
          onMounted(() => {
             //CHECK IF THERE'S DATA IN STORE TFIRST
@@ -232,7 +250,7 @@
          }
          const CLOSE_DROPDOWN = () => {
             regionslistIsShown.value === true?
-               regionslistIsShown.value = false : console.log('Dropdown closed')
+               regionslistIsShown.value = false : console.log('Dropdown closed') 
          }
 
          const filteredCountries = computed(() => {

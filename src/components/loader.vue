@@ -1,5 +1,13 @@
 <template>
-   <span class="loader"></span>
+   <span class="
+      loader
+      before:animate-animLoader after:animate-animLoader animate-animLoader
+      
+      dark:after:text-white dark:before:text-white dark:text-white   
+      dark:before:animate-animLoaderDark_D dark:after:animate-animLoaderDark dark:animate-animLoaderDark
+   ">
+
+   </span>
 </template>
 
 <script>
@@ -17,10 +25,9 @@ export default {
       background: currentColor;
       display: block;
       position: relative;
-      color: black;
       transform: translateY(30px);
       box-sizing: border-box;
-      animation: animloader 2s 0.2s ease infinite;
+    //   animation: animloader 2s 0.2s ease infinite;
    }
 
    .loader::after,
@@ -32,11 +39,10 @@ export default {
       box-shadow: 0 20px, 0 -20px;
       border-radius: 4px;
       background: currentColor;
-      color: black;
       position: absolute;
       left: 20px;
       top: 0;
-      animation: animloader 2s 0.2s ease infinite;
+    //   animation: animloader 2s 0.2s ease infinite;
    }
 
    .loader::before {
