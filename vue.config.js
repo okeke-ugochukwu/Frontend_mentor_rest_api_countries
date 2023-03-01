@@ -3,6 +3,8 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
 
+  publicPath: '/Frontend_mentor_rest_api_countries',
+
   pages: {
    index: {
       entry: './src/main.js',
