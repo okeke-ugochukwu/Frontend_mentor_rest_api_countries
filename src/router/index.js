@@ -56,6 +56,11 @@ const routes = [
             component: () => import(/* webpackChunkName: "countryDetail" */ '@/views/country/country.vue'),
          }
       ]
+   },
+
+   {
+      path: '/:pathMatch(.*)*',
+      redirect: {name: 'home'}
    }
 ]
 

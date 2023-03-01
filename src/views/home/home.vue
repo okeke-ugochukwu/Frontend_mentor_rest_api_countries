@@ -3,7 +3,7 @@
 
       <headerBar />
       
-      <main class="mb-[65px]">
+      <main class="main mb-[65px]">
 
          <!-- CENTERED BOX -->
          <div class="w-[91.46%] m-auto md:w-[88.88%] 2xl:w-[83%]">
@@ -27,7 +27,7 @@
                      placeholder="Search for a country…"
                      class=
                         "text-xs text-[#C4C4C4] placeholder:text-[#C4C4C4] w-full 
-                        focus:outline-none focus:text-[#848484] peer/search md:text-sm
+                        focus:outline-none focus:outline-0 focus:text-[#848484] peer/search md:text-sm
                         dark:bg-rca-grey  dark:text-white
                      " 
                      @keyup="SET_SEARCH_QUERY"
@@ -65,6 +65,7 @@
 
                   <!-- DUMMY SELECT + OPTIONS -->
                   <button 
+                     id="filter_dummy_select"
                      class="
                         bg-white rounded-[5px] w-[200px] flex items-center 
                         justify-between py-[14px] pl-[24px] pr-[19px] shadow-rca min-h-[48px]
@@ -85,7 +86,13 @@
                      </svg>
                   </button>
 
-                  <div class="absolute bg-white rounded-[5px] w-[200px] mt-1 shadow-rca dark:bg-rca-grey" v-show="regionslistIsShown">
+                  <div 
+                     id="filter_dummy_options"
+                     class="
+                        absolute bg-white rounded-[5px] w-[200px] mt-1 
+                        shadow-rca dark:bg-rca-grey
+                     " 
+                     v-show="regionslistIsShown">
                      <ul class="py-4">
                         <li 
                            v-for="region in regions" :key="region"
@@ -94,7 +101,7 @@
                               hover:cursor-pointer hover:opacity-75
                               md:text-sm  dark:text-white
                            "
-                           @click="SET_REGION_FILTER(region)"
+                           @mouseup="SET_REGION_FILTER(region)"
                         >
                            {{ region }}
                         </li>
@@ -125,13 +132,14 @@
                >
                   
                <countryCard 
-                  v-for="country in filteredCountries.slice(0, countryCount)" :key="country.name"
+                  v-for="country in filteredCountries.slice(0, countryCount)" :key="country.name.common"
                   :country="country"
                />
 
                </div>
             </div>
 
+            <!-- NO RESULTS MSSG -->
             <div 
                v-if="filteredCountries.length === 0 && searchQuery.length != 0"
                class="
@@ -144,7 +152,7 @@
                Your search didn't pull up any results
             </div>
 
-
+            <!-- SCROLL TO TOP + SHOW MORE  -->
             <div 
                class="
                   mt-10 flex flex-col gap-3 sm:flex-row w-[76.96%] m-auto
@@ -155,7 +163,11 @@
                <!-- SHOW MORE BTN -->
                <actionBtn  
                   @click="$store.commit('increaseCountryCount')"
-                  v-if="filteredCountries.length != 0 && filteredCountries.length > 24"
+                  v-if="
+                     filteredCountries.length != 0 && 
+                     filteredCountries.length > 12 && 
+                     filteredCountries.length > countryCount
+                  "
                   class="
                      w-[60%] min-w-[200px] max-w-[300px] px-[30px] 
                      m-auto rounded-md min-h-[45px] font-bold
@@ -168,7 +180,7 @@
                
                <actionBtn  
                   @click="SCROLL_TO_TOP"
-                  v-if="filteredCountries.length != 0 && filteredCountries.length > 24"
+                  v-if="filteredCountries.length != 0"
                   class="
                      w-[60%] min-w-[200px] max-w-[300px] px-[30px] 
                      m-auto rounded-md min-h-[45px] font-bold
@@ -182,6 +194,7 @@
          </div>
          
       </main>
+
    </div>
 </template>
 
@@ -205,16 +218,21 @@
          var countryCount = computed(() => {
             return store.state.countryCount
          });
-
-        //  document.body.addEventListener('mousedown',() => {
-        //     regionslistIsShown.value === true ?
-        //        alert('open') : alert('closed') 
-        //  })
         
          onMounted(() => {
             //CHECK IF THERE'S DATA IN STORE TFIRST
             countries.value.length === 0 ?
                GET_COUNTRIES(store) : console.log('Data in store')
+
+
+            window.addEventListener('mouseup',(e) => {
+              if(e.target.id === 'filter_dummy_select' || e.target.id === 'filter_dummy_select') {
+                  console('Dropdown clicked')
+              }
+              else {
+               regionslistIsShown.value = false
+              }
+         })
          })
 
          //GENERTE LIST OF REGIONS & FILTER TOGGLE
@@ -258,10 +276,10 @@
            var search_query = searchQuery.value.toLowerCase();
 
            if(filterQuery.value === 'None') {
-            temp = countries.value.filter(country => country.name.toLowerCase().includes(search_query))
+               temp = countries.value.filter(country => country.name.common.toLowerCase().includes(search_query))
            }
            else {
-            temp = countries.value.filter(country => country.name.toLowerCase().includes(search_query) && country.region === filterQuery.value)
+               temp = countries.value.filter(country => country.name.common.toLowerCase().includes(search_query) && country.region === filterQuery.value)
            }
            
             return temp

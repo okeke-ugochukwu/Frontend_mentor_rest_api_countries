@@ -48,7 +48,7 @@
                            md:text-[32px] md:leading-[43.65px] md:mb-[23px]
                         "
                      >
-                        {{ country.name }}
+                        {{ country.name.official }}
                      </h2>
 
                      <!-- COUNTRY SUMMARY (FLEXBOX) -->
@@ -59,7 +59,7 @@
                            md:mb-[68px] 2xl:gap-[117px]
                         "
                      >
-                        <div class="">
+                        <div class="sm:max-w-[350px]">
                            <span
                               v-for="info in Object.entries(GET_COUNTRY_INFO(country)).slice(0 ,5)" :key="info"
                               class="
@@ -124,6 +124,7 @@
    import actionBtn from '@/components/actionBtn.vue'
    import GET_COUNTRIES from '@/composables/getCountries';
    import { computed, onMounted } from 'vue';
+   import { useRouter } from 'vue-router';
    import { useStore } from 'vuex'
    
 
@@ -134,18 +135,23 @@
 
       setup (props) {
          const store = useStore();
+         const router = useRouter();
 
          onMounted(() => {
             //CHECK IF THERE'S DATA IN STORE FIRST, THEN ACT ACCORDINGLY
             countries.value.length === 0 ?
                GET_COUNTRIES(store) :
-               console.log('Data in store')
+               console.log('Data in store');
+
+            //GO BACK HOME IF THERE'S NO COUNTRY THAT MATCHES PROPS SEARCH 
+            countryFiltered.value.length === 0 ?
+               router.push('/'): '';
          })
          
-         var countries = computed(() => { return store.state.countries}) 
+         var countries = computed(() => { return store.state.countries }) 
 
          var countryFiltered = computed(() => {
-            return countries.value.filter((country => country.alpha3Code === props.id))
+            return countries.value.filter((country => country.cca3 === props.id))
          });
 
          var country = computed(() => {
@@ -154,17 +160,27 @@
 
          const GET_COUNTRY_INFO = (country) => {
             return {
-               'Native Name': country.nativeName,
+               'Native Name': 
+                  Object.values(country.name.nativeName).length >= 2 ?
+                     Object.values(country.name.nativeName)[1].official :
+                     Object.values(country.name.nativeName)[0].official ,
                'Population': country.population.toLocaleString(),
                'Region': country.region,
                'Sub Region': country.subregion,
-               'Capital': country.capital,
-               'Top Level Domain': country.topLevelDomain.toString().replaceAll(',', ', '),
+               'Capital': country.capital[0],
+               'Top Level Domain': country.tld.toString().replaceAll(',', ', '),
                'Currencies': 
                   country.currencies?
-                  country.currencies.map(data => data.name).toString().replace(/(^\w|\s\w)/g, (m) => m.toUpperCase()) : ' ',
-               'Languages': country.languages.map(data => data.name).toString().replaceAll(',', ', '),
+                  GET_CURRENCIES(country) : ' ',
+               'Languages': Object.values(country.languages).toString().replace(',', ', ')
             }
+         }
+
+         const GET_CURRENCIES = (country) => {
+            return Object.values(country.currencies)
+               .map(item => item.name)
+                  .toString().replace(',', ', ')
+                     .replace(/(^\w|\s\w)/g, m => m.toUpperCase())
          }
 
          const GET_BORDER_COUNTRIES = (countryCodes) => {
@@ -172,11 +188,11 @@
 
             countryCodes.forEach(code => {
                countries.value.forEach(country => {
-                  if (country.alpha3Code === code) {
+                  if (country.cca3 === code) {
                      borderCountries.push(
                         {
-                           'name': country.name,
-                           'code': country.alpha3Code
+                           'name': country.name.common,
+                           'code': country.cca3
                         }
                      )
                   }

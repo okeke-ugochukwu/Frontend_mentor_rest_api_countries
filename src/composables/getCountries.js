@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 const GET_COUNTRIES = async (store) => {
-   await axios.get('http://localhost:3000/countries')
+   //https://restcountries.com/v3.1/all
+   await axios.get('https://restcountries.com/v3.1/all')
       .then(response => {
          store.commit('setCountries', response.data)
       })
